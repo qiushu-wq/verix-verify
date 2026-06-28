@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verix · Multi-Anchor Verification Terminal</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<noscript>
+  <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0f;color:#cdd6e0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;text-align:center">
+    <div>
+      <p style="font-size:24px;letter-spacing:8px;color:#00f0ff;margin-bottom:12px">VERIX</p>
+      <p style="color:#667788;font-size:14px">Multi-Anchor Verification Terminal requires JavaScript to render.</p>
+    </div>
+  </div>
+</noscript>
+
+<!-- Three.js 3D Background Canvas -->
+<canvas id="verix-canvas"></canvas>
+
+<!-- Boot Phase: Login Card Overlay -->
+<div id="login-overlay">
+  <div id="login-card">
+    <div id="login-card-surface">
+      <!-- Surface dot matrix injected by JS -->
+      <canvas id="login-dot-canvas"></canvas>
+    </div>
+    <div id="login-card-content">
+      <div class="login-emblem">
+        <span class="login-emblem-char">◤</span>
+        <span class="login-emblem-char login-emblem-dot">·</span>
+        <span class="login-emblem-char">◥</span>
+      </div>
+      <h1 class="login-title">VERIX</h1>
+      <p class="login-subtitle">Multi-Anchor Verification System</p>
+      <p class="login-tagline">0.5M params &gt; 70B LLM — Not optimization, paradigm shift.</p>
+
+      <!-- Metric Carousel inside card -->
+      <div id="login-carousel">
+        <div id="login-carousel-track">
+          <div class="carousel-slide" id="carousel-slide">
+            <div class="carousel-metric-label"></div>
+            <div class="carousel-metric-value"></div>
+            <div class="carousel-metric-detail"></div>
+          </div>
+        </div>
+        <div id="login-carousel-dots"></div>
+      </div>
+
+      <button id="btn-enter" class="btn-enter">
+        <span class="btn-enter-text">ENTER VERIX</span>
+        <span class="btn-enter-arrow">→</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Main Dashboard (hidden initially) -->
+<div id="dashboard" class="hidden">
+  <!-- Header -->
+  <header id="dashboard-header">
+    <div class="header-left">
+      <span class="header-emblem">◤ · ◥</span>
+      <h1 class="header-title">VERIX</h1>
+      <span class="header-subtitle">MULTI-ANCHOR VERIFICATION TERMINAL</span>
+    </div>
+    <div class="header-right">
+      <span id="header-clock" class="header-clock">--</span>
+      <span id="header-t1-badge" class="header-badge hidden">T1 ACTIVE</span>
+    </div>
+  </header>
+
+  <!-- Agent Panels -->
+  <section id="agent-panels">
+    <!-- Agent Alpha -->
+    <div class="agent-panel agent-alpha" id="panel-alpha">
+      <div class="agent-panel-header">
+        <span class="agent-icon">α</span>
+        <div class="agent-title-group">
+          <h2 class="agent-name">AGENT ALPHA</h2>
+          <span class="agent-anchor">PHYSICS ANCHOR</span>
+        </div>
+        <span class="agent-status-dot online" id="status-alpha"></span>
+      </div>
+      <div class="agent-metrics">
+        <div class="agent-metric-row">
+          <span class="metric-label">Model</span>
+          <span class="metric-value">GNN 0.5M + MuJoCo 2.3.7</span>
+        </div>
+        <div class="agent-metric-row">
+          <span class="metric-label">Accuracy</span>
+          <span class="metric-value metric-highlight" id="acc-alpha">99.93%</span>
+        </div>
+        <div class="agent-metric-row">
+          <span class="metric-label">Latency</span>
+          <span class="metric-value">3.3ms</span>
+        </div>
+        <div class="agent-metric-row">
+          <span class="metric-label">Anchor Source</span>
+          <span class="metric-value">MuJoCo physics engine</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent Beta -->
+    <div class="agent-panel agent-beta" id="panel-beta">
+      <div class="agent-panel-header">
+        <span class="agent-icon">β</span>
+        <div class="agent-title-group">
+          <h2 class="agent-name">AGENT BETA</h2>
+          <span class="agent-anchor">LOGIC ANCHOR</span>
+        </div>
+        <span class="agent-status-dot online" id="status-beta"></span>
+      </div>
+      <div class="agent-metrics">
+        <div class="agent-metric-row">
+          <span class="metric-label">Model</span>
+          <span class="metric-value">Lean 4 + BFS</span>
+        </div>
+        <div class="agent-metric-row">
+          <span class="metric-label">Accuracy</span>
+          <span class="metric-value metric-highlight" id="acc-beta">28/28</span>
+        </div>
+        <div class="agent-metric-row">
+          <span class="metric-label">Latency</span>
+          <span class="metric-value">250ms</span>
+        </div>
+        <div class="agent-metric-row">
+          <span class="metric-label">Anchor Source</span>
+          <span class="metric-value">Lean 4 type checker</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Agent Gamma -->
+    <div class="agent-panel agent-gamma" id="panel-gamma">
+      <div class="agent-panel-header">
+        <span class="agent-icon">γ</span>
+        <div class="agent-title-group">
+          <h2 class="agent-name">AGENT GAMMA</h2>
+          <span class="agent-anchor">SOCIAL ANCHOR</span>
+        </div>
+        <span class="agent-status-dot online" id="status-gamma"></span>
+      </div>
+      <div class="agent-metrics">
+        <div class="agent-metric-row">
+          <span class="metric-label">Model</span>
+          <span class="metric-value">MLP 0.5M + Survey</span>
+        </div>
+        <div class="agent-metric-row">
+          <span class="metric-label">Accuracy</span>
+          <span class="metric-value metric-highlight" id="acc-gamma">92.9%</span>
+        </div>
+        <div class="agent-metric-row">
+          <span class="metric-label">Latency</span>
+          <span class="metric-value">&lt;1ms</span>
+        </div>
+        <div class="agent-metric-row">
+          <span class="metric-label">Anchor Source</span>
+          <span class="metric-value">1,475 human judgments</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Full Carousel (post-login) -->
+  <section id="dashboard-carousel">
+    <div id="dash-carousel-track">
+      <div class="dash-carousel-slide" id="dash-carousel-slide">
+        <div class="dash-carousel-label"></div>
+        <div class="dash-carousel-value"></div>
+        <div class="dash-carousel-detail"></div>
+      </div>
+    </div>
+    <div id="dash-carousel-dots"></div>
+  </section>
+
+  <!-- Status Bar -->
+  <footer id="status-bar">
+    <div class="status-left">
+      <span class="status-item">
+        <span class="status-dot cyan"></span>
+        GWT Cycle: <span id="sb-gwt">--</span>
+      </span>
+      <span class="status-item">
+        <span class="status-dot green"></span>
+        Tasks/s: <span id="sb-tps">--</span>
+      </span>
+      <span class="status-item">
+        <span class="status-dot amber"></span>
+        T1 Events: <span id="sb-t1">0</span>
+      </span>
+      <span class="status-item">
+        Blind Spots: <span id="sb-blind">0</span>
+      </span>
+    </div>
+    <div class="status-right">
+      <span class="status-item">Self-Assembly: <span id="sb-sa" class="text-gold">5/5</span></span>
+      <span class="status-item">Meta-Validators: <span id="sb-mv" class="text-gold">3/3</span></span>
+    </div>
+  </footer>
+</div>
+
+<!-- Three.js CDN -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+
+<!-- Application Scripts (ES modules) -->
+<script type="module" src="js/api.js"></script>
+<script type="module" src="js/three-scene.js"></script>
+<script type="module" src="js/main.js"></script>
+
+</body>
+</html>
