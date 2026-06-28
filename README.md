@@ -49,53 +49,6 @@
 
 ---
 
-## Quick Start
-
-```bash
-git clone https://github.com/qiushu-wq/verix-verify.git
-cd verix-verify
-pip install -r requirements.txt
-
-# Core agents
-python agents/agent_alpha.py --demo
-python agents/agent_beta.py
-python agents/agent_delta.py --eval
-python agents/agent_gamma.py
-
-# Cross-domain transfer
-python agents/sage_v3.py
-
-# Code generation
-python agents/verix_coder.py
-```
-
----
-
-## Components
-
-| Agent | Domain | Verifier | Tech |
-|-------|--------|----------|------|
-| α | Physics | MuJoCo simulator | GNN 0.5M |
-| β | Logic | Lean 4 type checker | BFS search |
-| δ | Code | Compiler + tests | Template synthesis |
-| γ | Human | Crowd consensus | MLP 0.5M |
-| ε | Semantic | Pattern matching | Knowledge graph |
-
----
-
-## Published Research
-
-| Component | Paper |
-|------|-------|
-| GNN Physics | Battaglia et al. 2016 NeurIPS |
-| Generalizable Physics | Sanchez-Gonzalez et al. 2018 ICML |
-| Causal Discovery | Lei, Scholkopf, Posner 2022 |
-| Structure Mapping | Gentner 1983 Cognitive Psychology |
-| Core Knowledge | Spelke 2007 Developmental Science |
-| Predictive Processing | Clark 2013 BBS |
-
----
-
 ## Test Data
 
 67 scenarios, 1,475 real human judgments — open source under CC BY 4.0.
